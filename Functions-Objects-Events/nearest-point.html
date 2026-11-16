@@ -139,7 +139,7 @@
     .kpi b { font: 500 18px var(--mono); font-variant-numeric: tabular-nums; }
     .console { margin: 16px 0 0; padding: 12px 14px; border-radius: 12px; background: #FAF9F6; border: 1px solid var(--line-soft); font: 13px/1.6 var(--mono); color: var(--ink); overflow-x: auto; }
     .console .prompt { color: var(--muted); }
-    .formula { margin-top: 14px; font: 12.5px var(--mono); color: var(--muted); }
+    .formula { margin-top: 14px; font: italic 19px var(--serif), Georgia, serif; color: var(--ink-2); }
 
     /* Данни */
     .group-label { display: flex; justify-content: space-between; margin: 0 0 10px; font: 500 12px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
@@ -217,7 +217,7 @@
           <div class="readout" aria-live="off">x <b id="hoverX">—</b> y <b id="hoverY">—</b></div>
         </div>
         <div class="plane-wrap">
-          <canvas id="plane" aria-label="Координатна равнина от -100 до 100"></canvas>
+          <canvas id="plane" aria-label="Координатна равнина от -80 до 80"></canvas>
           <div class="canvas-hint" id="hint"><i>1</i><span id="hintText">Кликнете, за да поставите локацията</span></div>
         </div>
         <div class="legend">
@@ -336,7 +336,7 @@
 
     const COLORS = { loc: "#F0441F", near: "#0B9F6E", ink: "#111216", accent: "#2D4BFF" };
     const SIZE = 600;    // логически размер на canvas
-    const RANGE = 100;   // координатите са от -100 до 100
+    const RANGE = 80;    // координатите са от -80 до 80
 
     const canvas = $("plane");
     const ctx = canvas.getContext("2d");
@@ -374,9 +374,12 @@
       ctx.fillText(text, x, y);
     }
 
-    function pointLabel(text, x, y, color, r) {
-      const right = x < SIZE - 90;
-      label(text, right ? x + r + 7 : x - r - 7, y - r - 4, color, right ? "left" : "right");
+    // Надписът на точката отива от страната, обърната навън от локацията
+    function pointLabel(text, x, y, color, r, preferLeft = false) {
+      let left = preferLeft;
+      if (left && x < 90) left = false;
+      if (!left && x > SIZE - 90) left = true;
+      label(text, left ? x - r - 7 : x + r + 7, y - r - 4, color, left ? "right" : "left");
     }
 
     function pill(text, x, y, bg) {
@@ -468,8 +471,14 @@
         ctx.strokeStyle = COLORS.near;
         ctx.lineWidth = 2;
         ctx.stroke();
-        pill(`d = ${d.toFixed(2)}`, (lx + px(nearest.x)) / 2, (ly + py(nearest.y)) / 2, COLORS.near);
+
+        // Етикет с разстоянието – над кръга на търсене (или под него, ако няма място)
+        const r = Math.max(d * unitToPx, 26);
+        const pillY = ly - r - 16 > 14 ? ly - r - 16 : ly + r + 16;
+        pill(`d = ${d.toFixed(2)}`, Math.min(Math.max(lx, 50), SIZE - 50), pillY, COLORS.near);
       }
+
+      const awayFromLoc = (p) => Boolean(userLoc) && p.x < userLoc.locX;
 
       // Точки
       for (const p of points) {
@@ -478,12 +487,12 @@
           ctx.beginPath(); ctx.arc(x, y, 15, 0, Math.PI * 2); ctx.fillStyle = "rgba(11,159,110,.14)"; ctx.fill();
           ctx.beginPath(); ctx.arc(x, y, 7.5, 0, Math.PI * 2); ctx.fillStyle = COLORS.near; ctx.fill();
           ctx.lineWidth = 2.5; ctx.strokeStyle = "#fff"; ctx.stroke();
-          pointLabel(`(${fmt(p.x)}, ${fmt(p.y)})`, x, y, COLORS.near, 9);
+          pointLabel(`(${fmt(p.x)}, ${fmt(p.y)})`, x, y, COLORS.near, 9, awayFromLoc(p));
         } else {
           ctx.beginPath(); ctx.arc(x, y, 5.5, 0, Math.PI * 2);
           ctx.fillStyle = "#fff"; ctx.fill();
           ctx.lineWidth = 2; ctx.strokeStyle = COLORS.ink; ctx.stroke();
-          pointLabel(`(${fmt(p.x)}, ${fmt(p.y)})`, x, y, "#3B3E46", 6);
+          pointLabel(`(${fmt(p.x)}, ${fmt(p.y)})`, x, y, "#3B3E46", 6, awayFromLoc(p));
         }
       }
 
@@ -500,7 +509,7 @@
         ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2);
         ctx.fillStyle = COLORS.loc; ctx.fill();
         ctx.lineWidth = 2.5; ctx.strokeStyle = "#fff"; ctx.stroke();
-        pointLabel(`(${fmt(userLoc.locX)}, ${fmt(userLoc.locY)})`, x + 8, y - 6, COLORS.loc, 9);
+        label(`(${fmt(userLoc.locX)}, ${fmt(userLoc.locY)})`, x, y + 31, COLORS.loc, "center"); // под мишената
       }
 
       // Мерник под курсора
