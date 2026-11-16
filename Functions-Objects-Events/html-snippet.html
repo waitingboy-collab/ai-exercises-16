@@ -168,7 +168,7 @@
 
     /* ================= Работна площ ================= */
     .workbench { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px; align-items: start; }
-    @media (max-width: 960px) { .workbench { grid-template-columns: 1fr; } }
+    @media (max-width: 960px) { .workbench { grid-template-columns: minmax(0, 1fr); } }
 
     .field { margin-bottom: 18px; }
     .field label { display: flex; justify-content: space-between; margin-bottom: 8px; font: 500 12px var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
@@ -233,7 +233,7 @@
     /* ================= Стъпки ================= */
     .section { margin-top: 20px; }
     .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    @media (max-width: 960px) { .steps { grid-template-columns: 1fr; } }
+    @media (max-width: 960px) { .steps { grid-template-columns: minmax(0, 1fr); } }
     .step { padding: 22px 20px; border-right: 1px solid var(--line-soft); min-width: 0; }
     .step:last-child { border-right: 0; }
     @media (max-width: 960px) { .step { border-right: 0; border-bottom: 1px solid var(--line-soft); } .step:last-child { border-bottom: 0; } }

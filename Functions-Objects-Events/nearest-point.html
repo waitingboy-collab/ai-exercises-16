@@ -100,7 +100,7 @@
 
     /* ================= Работна площ ================= */
     .workbench { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 20px; align-items: start; }
-    @media (max-width: 1000px) { .workbench { grid-template-columns: 1fr; } }
+    @media (max-width: 1000px) { .workbench { grid-template-columns: minmax(0, 1fr); } }
     .stack { display: grid; gap: 20px; min-width: 0; }
 
     .readout { display: flex; gap: 14px; font: 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }

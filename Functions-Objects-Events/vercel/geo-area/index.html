@@ -94,7 +94,7 @@
 
     /* ================= Работна площ ================= */
     .workbench { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 20px; align-items: start; }
-    @media (max-width: 1000px) { .workbench { grid-template-columns: 1fr; } }
+    @media (max-width: 1000px) { .workbench { grid-template-columns: minmax(0, 1fr); } }
     .stack { display: grid; gap: 20px; min-width: 0; }
 
     /* Превключвател на слоеве */
@@ -163,7 +163,7 @@
     /* Формула */
     .section { margin-top: 20px; }
     .formula-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
-    @media (max-width: 900px) { .formula-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 900px) { .formula-grid { grid-template-columns: minmax(0, 1fr); } }
     .formula-main { padding: 34px 28px; border-right: 1px solid var(--line-soft); overflow-x: auto; }
     @media (max-width: 900px) { .formula-main { border-right: 0; border-bottom: 1px solid var(--line-soft); } }
     .math { font: italic 400 clamp(22px, 2.6vw, 32px)/1.4 var(--serif), Georgia, serif; white-space: nowrap; color: var(--ink); }
