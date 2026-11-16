@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="bg">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML Snippet</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #616e7c;
+      --border: #d9dee5;
+      --accent: #2563eb;
+      --code-bg: #f1f3f6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+    }
+    main { max-width: 760px; margin: 0 auto; padding: 32px 16px 48px; }
+    h1 { font-size: 1.6rem; margin: 0 0 4px; }
+    .subtitle { color: var(--muted); margin: 0 0 24px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .card h2 {
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+      margin: 0 0 12px;
+    }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    input, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font: inherit;
+      color: inherit;
+      background: #fff;
+    }
+    input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+    textarea { min-height: 90px; resize: vertical; }
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { filter: brightness(1.08); }
+    pre {
+      margin: 0;
+      padding: 12px 14px;
+      background: var(--code-bg);
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: .9rem;
+    }
+    .rendered { border: 1px dashed var(--border); border-radius: 8px; padding: 4px 16px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>HTML Snippet</h1>
+    <p class="subtitle">Въведете заглавие и текст. Функцията <code>printHTMLSnippet</code> ще ги обгради с HTML тагове.</p>
+
+    <form id="snippetForm" class="card">
+      <label for="title">Заглавие</label>
+      <input id="title" value="JavaScript" required>
+
+      <label for="text">Текст</label>
+      <textarea id="text" required>JS is a modern language.</textarea>
+
+      <button type="submit">Генерирай HTML</button>
+    </form>
+
+    <section class="card">
+      <h2>Суров текст (HTML код)</h2>
+      <pre id="raw"></pre>
+    </section>
+
+    <section class="card">
+      <h2>Рендериран HTML</h2>
+      <div id="rendered" class="rendered"></div>
+    </section>
+  </main>
+
+  <script>
+    // Същата функция като в html-snippet.js – printAsHTML е вътрешна
+    function printHTMLSnippet(title, text) {
+      function printAsHTML(text, tag = "div") {
+        return `<${tag}>${text}</${tag}>`;
+      }
+      return printAsHTML(printAsHTML(title, "h1") + printAsHTML(text, "p"));
+    }
+
+    const form = document.getElementById("snippetForm");
+    const rawOutput = document.getElementById("raw");
+    const renderedOutput = document.getElementById("rendered");
+
+    function showSnippet() {
+      const title = document.getElementById("title").value;
+      const text = document.getElementById("text").value;
+      const snippet = printHTMLSnippet(title, text);
+
+      rawOutput.textContent = snippet;   // textContent показва таговете като текст
+      renderedOutput.innerHTML = snippet; // innerHTML ги изпълнява като HTML
+    }
+
+    // Събитие submit: preventDefault спира презареждането на страницата
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      showSnippet();
+    });
+
+    showSnippet(); // показваме примера още при зареждане
+  </script>
+</body>
+</html>
