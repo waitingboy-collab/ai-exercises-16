@@ -36,9 +36,13 @@ HTML страниците са самостоятелни файлове. Отв
 
 ## Публикуване
 
-Всяка HTML страница е отделен проект във Vercel. Папката `vercel/<име>/` съдържа копие на страницата като `index.html`:
+Всяка HTML страница е отделен проект във Vercel, свързан с repo-то `ai-exercises-16`. Root Directory на всеки проект е `Functions-Objects-Events/vercel/<име>`, така че всеки `git push` публикува страницата автоматично.
+
+След промяна в HTML файла копирайте го в папката за Vercel и направете push:
 
 ```bash
 cp nearest-point.html vercel/nearest-point/index.html
-cd vercel/nearest-point && vercel deploy --prod
+git add -A && git commit -m "..." && git push
 ```
+
+Пълното описание на работата е в [README в корена на repo-то](../README.md).
